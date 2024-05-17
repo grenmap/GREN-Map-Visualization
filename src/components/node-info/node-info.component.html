@@ -1,0 +1,34 @@
+<mat-toolbar i18n>Node Details</mat-toolbar>
+<mat-toolbar class="name-toolbar">{{node.name}}</mat-toolbar>
+<div id="info-padding">
+	<div class="list-item">
+		<p *ngIf="!!node.properties.description">{{node.properties.description[0]}}</p>
+		<div class="item-contents" id="properties">
+			<p matListItemLine class="list-item" *ngFor="let tag of node.properties.tag || []">
+				<mat-icon>place</mat-icon>
+				{{tag}}
+			</p>
+		<mat-divider></mat-divider>
+	</div>
+
+
+	<div class="list-item" *ngIf="node.connectedOwners?.length > 0" id="connected-to">
+		<div class="item-contents">
+			<p class="item-keyword" i18n>Owners of nodes directly connected:</p>
+			<ng-container *ngFor="let connectedOwner of node.connectedOwners">
+				<p matListItemLine class="list-item" id="connectedOwner">
+					<mat-icon>brightness_1</mat-icon>
+					{{connectedOwner.name}}
+				</p>
+				<mat-divider></mat-divider>
+			</ng-container>
+		</div>
+	</div>
+
+	<div class="list-item">
+		<div class="item-contents">
+			<p class="item-keyword" i18n>Managed by:</p>
+			<app-owner-info [owners]="node.owners"></app-owner-info>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,113 @@
+/* You can add global styles to this file, and also import other style files */
+@import "leaflet/dist/leaflet.css";
+// TODO Decide on material theme for page
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+
+body,html {
+    margin: 0;
+    padding: 0;
+    font-family: Roboto;
+}
+* {
+    box-sizing: border-box;
+}
+
+table {
+    width: 100%;
+    height:100%;
+}
+.scroll-container{
+    overflow: auto;
+    height:100%;
+}
+
+// Allows acordians to manipulate the size of the list to display properly
+/* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version. */
+mat-list-item {
+    height: unset !important;
+    min-height: 48px;
+}
+
+.mat-accordion{
+    width: 100%;
+}
+
+
+
+// Extended info header
+
+.mat-toolbar {
+    font-weight: bold;
+    font-size: 18px;
+    background-color: #2a2d7c;
+    color: white;
+    height: 40px;
+}
+
+.close-info-drawer {
+    color: white;
+    position: absolute !important;
+    top: 0px;
+    right: 0px;
+}
+
+// Remove line from side of drawer
+.mat-drawer-side.mat-drawer-end {
+    border-left: 0;
+}
+
+// Toolbars for showing element names
+.name-toolbar {
+    background-color: #666;
+    white-space: break-spaces !important;
+    line-height: 25px;
+    height: auto;
+}
+
+
+// Extended info contents
+
+h2 {
+    font-weight: bold;
+    font-size: 18px;
+    margin-top: 5px;
+    margin-bottom: 0px;
+}
+
+
+.mat-line {
+    margin-top: 8px;
+    margin-bottom: 0px;
+}
+
+.item-contents {
+    padding-left: 10px;
+}
+
+.item-keyword {
+    font-weight: bold;
+    padding-right: 2px;
+}
+
+#info-padding {
+    padding: 0 16px;
+}
+
+// When added to an acordian, will affect the child body to make it scroll if it gets too big
+.scroll-accordian .mat-expansion-panel-body {
+    max-height: 256px;
+    overflow-y: scroll;
+}
+
+
+// Below is a hack to always show scrollbars on OSX
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+  }
+
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, .5);
+    box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+}

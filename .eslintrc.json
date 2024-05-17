@@ -1,0 +1,111 @@
+{
+  "root": true,
+  "ignorePatterns": [
+    "projects/**/*"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "*.ts"
+      ],
+      "parserOptions": {
+        "project": [
+          "tsconfig.json",
+          "e2e/tsconfig.json"
+        ],
+        "createDefaultProgram": true
+      },
+      "extends": [
+        "plugin:@angular-eslint/ng-cli-compat",
+        "plugin:@angular-eslint/ng-cli-compat--formatting-add-on",
+        "plugin:@angular-eslint/template/process-inline-templates"
+      ],
+      "rules": {
+        "@angular-eslint/component-selector": [
+          "warn",
+          {
+            "type": "element",
+            "prefix": "app",
+            "style": "kebab-case"
+          }
+        ],
+        "@angular-eslint/directive-selector": [
+          "warn",
+          {
+            "type": "attribute",
+            "prefix": "app",
+            "style": "camelCase"
+          }
+        ],
+        "@typescript-eslint/ban-types": [
+          "warn",
+          {
+            "types": {
+              "Object": {
+                "message": "Use {} instead."
+              },
+              "String": {
+                "message": "Use string instead"
+              },
+              "Boolean": {
+                "message": "Use boolean instead"
+              },
+              "Number": {
+                "message": "Use number instead"
+              },
+              "Node": {
+                "message": "Did you mean MapNode?"
+              },
+              "Link": {
+                "message": "Did you mean MapLink?"
+              },
+              "NodeFilter": {
+                "message": "Did you mean MapNodeFilter?"
+              }
+            }
+          }
+        ],
+        "@typescript-eslint/explicit-member-accessibility": [
+          "off",
+          {
+            "accessibility": "explicit"
+          }
+        ],
+        "jsdoc/newline-after-description": "off",
+        "prefer-arrow/prefer-arrow-functions":"off",
+        "@typescript-eslint/no-explicit-any": "warn",
+        "no-trailing-spaces":0,
+        "@typescript-eslint/quotes":0,
+        "@typescript-eslint/naming-convention":0,
+        "@typescript-eslint/member-delimiter-style":0,
+        "@typescript-eslint/no-empty-interface":0,
+        "@typescript-eslint/member-ordering":0,
+        "@typescript-eslint/semi":0,
+        "arrow-body-style":0,
+        "@angular-eslint/use-lifecycle-interface":0,
+        "no-var":0,
+        "no-underscore-dangle":0,
+        "@typescript-eslint/no-shadow": [
+          "off",
+          {
+            "hoist": "all"
+          }
+        ],
+        "arrow-parens": [
+          "off",
+          "always"
+        ],
+        "import/order": "off"
+      }
+    },
+    {
+      "files": [
+        "*.html"
+      ],
+      "extends": [
+        "plugin:@angular-eslint/template/recommended"
+      ],
+      "rules": {}
+    }
+  ]
+}

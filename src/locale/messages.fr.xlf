@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="32100d260503d216481addb0a6e9051302e7a1ae" datatype="html">
+        <source> Remove all filters </source>
+        <target>Enlever tous les filtres</target>
+      </trans-unit>
+      <trans-unit id="cc9fa767a8d6a6bbb066bde385b3c6234da036e5" datatype="html">
+        <source> Filter <x id="INTERPOLATION" equiv-text="{{elementName(item.element)}}"/> by <x id="INTERPOLATION_1" equiv-text="{{item.property}}"/>: </source>
+        <target>Filtrer <x id="INTERPOLATION" equiv-text="{{elementName(item.element)}}"/> par <x id="INTERPOLATION_1" equiv-text="{{item.property}}"/>:</target>
+      </trans-unit>
+      <trans-unit id="f4e529ae5ffd73001d1ff4bbdeeb0a72e342e5c8" datatype="html">
+        <source>Close</source>
+        <target>Fermer</target>
+      </trans-unit>
+      <trans-unit id="8c279e28f011098f3e144c80563901d5c299a515" datatype="html">
+        <source>Link Details</source>
+        <target>Détails du lien</target>
+      </trans-unit>
+      <trans-unit id="813ab4425a8bbcf4c09edc1482940e9109dcde56" datatype="html">
+        <source>Connected to:</source>
+        <target>Connecté à :</target>
+      </trans-unit>
+      <trans-unit id="d04bbea85f470e406df51298cb5f809f68cd6b25" datatype="html">
+        <source>Managed by:</source>
+        <target>Géré par :</target>
+      </trans-unit>
+      <trans-unit id="2d653a3d7a3b48d501c08d3fe9376c1c4e24ed21" datatype="html">
+        <source>Node Details</source>
+        <target>Détails du nœud</target>
+      </trans-unit>
+      <trans-unit id="8e7cc2ad46f913fcdc5f897ac6981b9a49ce9b9e" datatype="html">
+        <source>Owners of nodes directly connected:</source>
+        <target>Propriétaires des nœuds connectés directement :</target>
+      </trans-unit>
+      <trans-unit id="ea3fb525d32d313ba0253fbd38ed3508fb40c34e" datatype="html">
+        <source>REN</source>
+        <target>RER</target>
+      </trans-unit>
+      <trans-unit id="f235a57753ccf675f15a1820b5cca46dd702d959" datatype="html">
+        <source>Connected Institution</source>
+        <target>Institution connectée</target>
+      </trans-unit>
+      <trans-unit id="ae190a9c3a8053aa598157a6bbaecd5c1ff0d5a5" datatype="html">
+        <source>Latitude: <x id="INTERPOLATION" equiv-text="{{ren.latitude}}"/></source>
+        <target>Latitude : <x id="INTERPOLATION" equiv-text="{{ren.latitude}}"/></target>
+      </trans-unit>
+      <trans-unit id="95bddd2e7c70a0b94031b1bc3a3a99d9c9112d9c" datatype="html">
+        <source>Longitude: <x id="INTERPOLATION" equiv-text="{{ren.longitude}}"/></source>
+        <target>Longitude : <x id="INTERPOLATION" equiv-text="{{ren.longitude}}"/></target>
+      </trans-unit>
+      <trans-unit id="01ac4da8162781561eac54103213c4d2326052d4" datatype="html">
+        <source> Research &amp; Education Networks
+</source>
+        <target>Réseaux de recherche et d'éducation</target>
+      </trans-unit>
+      <trans-unit id="e6495943deb1726fe2095656df1046da5fb863e1" datatype="html">
+        <source>Short name: <x id="INTERPOLATION" equiv-text="{{ren.shortName}}"/></source>
+        <target>Nom abrégé : <x id="INTERPOLATION" equiv-text="{{ren.shortName}}"/></target>
+      </trans-unit>
+      <trans-unit id="5149074130016502262" datatype="html">
+        <source>nodes</source>
+        <target>nœuds</target>
+      </trans-unit>
+      <trans-unit id="2192419029942137531" datatype="html">
+        <source>links</source>
+        <target>liens</target>
+      </trans-unit>
+      <trans-unit id="3270831867422194705" datatype="html">
+        <source>institutions</source>
+        <target>institutions</target>
+      </trans-unit>
+      <trans-unit id="1536087519743707362" datatype="html">
+        <source>Dismiss</source>
+        <target>Rejeter</target>
+      </trans-unit>
+      <trans-unit id="4087517590048923233" datatype="html">
+        <source>Navigator does not support geolocation</source>
+        <target>Le navigateur n'autorise pas la géolocalisation.</target>
+      </trans-unit>
+      <trans-unit id="2307513899956127143" datatype="html">
+        <source>Unauthorized to access topology data. Please make sure this host is listed in the &quot;Visualization Map Allowed Origins&quot; section of the GREN Admin site.</source>
+        <target>Accès aux données topologiques interdit. Veuillez vous assurer que l'hôte apparaît sur la liste des "Origines autorisées de la carte de visualisation" du site Admin du RMRE (GREN).</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

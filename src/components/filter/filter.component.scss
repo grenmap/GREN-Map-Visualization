@@ -1,0 +1,47 @@
+mat-accordion {
+  position: absolute;
+  z-index: 400;
+  top: 70px;
+  left: 10px;
+  height: 100px; 
+  width:300px;
+}
+
+mat-expansion-panel  {
+  background-color: rgba(255, 255, 255, .8);
+}
+
+#remove-filters-btn {
+  position: absolute;
+  margin-top: 5px;
+  margin-left: 0px;
+  background-color: rgba(255, 255, 255, .8)
+}
+
+#show-more-filters-btn {
+  position: absolute;
+  margin-top: 5px;
+  margin-left: 159px;
+  background-color: rgba(255, 255, 255, .8)
+}
+
+#filter-btn {
+  position: absolute;
+  z-index: 400;
+  bottom: 127px;
+  left: 10px;
+  padding-right: 1px;
+  z-index: 400;
+}
+.property-name-margin {
+  margin: 0 15px;
+}
+
+.property-value-margin {
+  margin: -2px;
+}
+
+li {
+  list-style-type: none;
+  padding-left: 10px;
+}

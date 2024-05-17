@@ -1,0 +1,29 @@
+<mat-toolbar i18n>
+    Research & Education Networks
+</mat-toolbar>
+<div id="info-padding">
+    <div class="list-item">
+        <div class="item-contents">
+            <ng-container *ngFor="let type of acceptedTypes">
+                <p class="item-keyword">{{type}}</p>
+                <mat-accordion multi>
+                    <ng-container *ngFor="let ren of rens">
+                        <mat-expansion-panel *ngIf="!!ren.properties.tag && ren.properties.tag[0] === type">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>{{ren.name}}</mat-panel-title>
+                                <mat-panel-description (click)="zoomToSelectedOwner(ren);$event.stopPropagation()">
+                                    <mat-icon class="expand-icon" title="Zoom to all owned nodes">visibility</mat-icon>
+                                </mat-panel-description>
+                            </mat-expansion-panel-header>
+                            <p i18n>Short name: {{ren.shortName}}</p>
+                            <p i18n>Latitude: {{ren.latitude}}</p>
+                            <p i18n>Longitude: {{ren.longitude}}</p>
+                        </mat-expansion-panel>
+                    </ng-container>
+
+                </mat-accordion>
+
+            </ng-container>
+        </div>
+    </div>
+</div>

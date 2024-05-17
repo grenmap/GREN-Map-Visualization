@@ -1,0 +1,28 @@
+.mat-expansion-panel-header-title,
+.mat-expansion-panel-header-description {
+    flex-basis: 0;
+}
+
+.mat-expansion-panel-header {
+    height: 100% !important;
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
+.mat-expansion-panel-header-description {
+    justify-content: flex-end;
+    align-items: center;
+    flex-grow: unset !important;
+}
+
+.mat-mdc-form-field + .mat-form-field {
+    margin-left: 8px;
+}
+
+.expand-icon:hover {
+    color: RoyalBlue;
+}
+
+.mat-icon {
+    vertical-align: middle;
+}

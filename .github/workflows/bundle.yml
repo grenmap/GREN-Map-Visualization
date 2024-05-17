@@ -1,0 +1,39 @@
+name: publish package to NPM
+on:
+  release:
+    types: [published]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      # Setup .npmrc file to publish to GitHub Packages
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '16.x'
+          registry-url: 'https://registry.npmjs.org'
+          # Defaults to the user or organization that owns the workflow file
+          scope: '@grenmap'
+      - run: npm install --legacy-peer-deps
+      - run: npm run-script bundle
+
+      # This step strips source code from the package.
+      # We want to retain only the files we published previously
+      # to gren-map-distribution.
+      - name: reduce package to bundled js, css and readme
+        run: |
+          mkdir bundle
+          find ./dist/gren-map-visualization/ -name 'gren*.js' -exec cp '{}' bundle ';'
+          cp ./dist/gren-map-visualization/package.json bundle
+          cp ./dist/gren-map-visualization/en/styles.css bundle
+          cp README.md bundle
+          find . -type d | grep -vE '^\.$|^./bundle$' | xargs rm -rf
+          find . -type f | grep -v bundle | xargs rm
+          mv bundle/* .
+          rmdir bundle
+      - run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}

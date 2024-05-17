@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>GrenVisualization</title>
+  <base href="./">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="gren-map.js"></script>
+</head>
+<body>
+  <div map style="max-height: 100vh; height: 100vh"></div>
+  <script>
+    window.addEventListener('load', (event) => {
+      window.G.map({ selector: '[map]'});
+    });
+    
+  </script>
+</body>
+</html>

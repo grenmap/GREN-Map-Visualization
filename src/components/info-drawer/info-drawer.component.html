@@ -1,0 +1,20 @@
+<mat-drawer-container [class.drawer-opened]="(openDrawerType | async) !== null">
+    <mat-drawer class="drawer" mode="side" position="end" [opened]="(openDrawerType | async) !== null" id="side-drawer">
+
+        <mat-spinner *ngIf='(openDrawerType | async) === "Loading"'></mat-spinner>
+
+        <app-link-info *ngIf='(openDrawerType | async) === "LinkInfo"' [link]='(target | async)'>
+        </app-link-info>
+
+        <app-node-info *ngIf='(openDrawerType | async) === "NodeInfo"' [node]='(target | async)'>
+        </app-node-info>
+
+        <app-ren-info *ngIf='(openDrawerType | async) === "RensInfo"'>
+        </app-ren-info>
+        <button mat-raised-button class="drawer-close" (click)="close()" i18n>Close</button>
+
+    </mat-drawer>
+    <mat-drawer-content>
+        <ng-content></ng-content>
+    </mat-drawer-content>
+</mat-drawer-container>

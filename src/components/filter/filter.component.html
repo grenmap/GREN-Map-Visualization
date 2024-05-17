@@ -1,0 +1,24 @@
+<button mat-mini-fab color="primary" id="filter-btn" aria-label="Show filter" (click)="toggleFilters()">
+  <mat-icon>filter_list</mat-icon>
+</button>
+
+<mat-accordion *ngIf="showFilterWindow">
+  <mat-expansion-panel [expanded]="false" *ngFor="let item of (filterService.combinedFilter | async)" class="scroll-accordian">
+
+    <mat-expansion-panel-header>
+      <mat-panel-title i18n>
+        Filter {{elementName(item.element)}} by {{item.property}}:
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <li *ngFor="let filter of item.filters | keyvalue">
+      <mat-checkbox [checked]="filter.value" (change)="toggle(item.element, item.property, filter.key)">
+        {{filter.key}}
+      </mat-checkbox>
+    </li>
+
+  </mat-expansion-panel>
+  <button mat-raised-button id="remove-filters-btn" (click)="removeAllFilters()" i18n>
+    Remove all filters
+  </button>
+</mat-accordion>

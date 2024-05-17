@@ -1,0 +1,22 @@
+mat-drawer{
+    box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
+}
+.mat-drawer-container, .mat-drawer-content {
+    display: block;
+    height: 100%;
+}
+
+.mat-drawer, .mat-drawer-end {
+    width: 300px;
+}
+
+.drawer-close {
+    margin: auto;
+    margin-top: 25px;
+    display: block;
+}
+
+mat-spinner {
+    margin: auto;
+    top: calc(50% - 50px);
+}

@@ -1,0 +1,34 @@
+<mat-accordion multi>
+    <mat-expansion-panel *ngFor="let owner of owners | sortBy:'asc':'name'">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                {{owner.name}}
+            </mat-panel-title>
+            <mat-panel-description (click)="zoomToSelectedOwner(owner);$event.stopPropagation()">
+                <mat-icon class="expand-icon" title="Zoom to all owned nodes">visibility</mat-icon>
+            </mat-panel-description>
+
+        </mat-expansion-panel-header>
+        <ng-container *ngIf="!!owner.properties.tag">
+            <mat-list-item *ngIf="owner.properties.tag.includes('REN')">
+                <mat-icon>timeline</mat-icon> <span i18n>REN</span>
+            </mat-list-item>
+            <mat-list-item *ngIf="owner.properties.tag.includes('Connected Institution')">
+                <mat-icon>school</mat-icon> <span i18n>Connected Institution</span>
+            </mat-list-item>
+        </ng-container>
+        <mat-list-item *ngIf="!!owner.properties.description">
+            <mat-icon>info</mat-icon>{{owner.properties.description[0]}}
+        </mat-list-item>
+        <mat-list-item *ngIf="!!owner.properties.url">
+            <mat-icon>language</mat-icon><a href="{{owner.properties.url[0]}}" target="_blank">{{owner.properties.url[0] | stripURL}}</a>  <!-- nosemgrep : var-in-href -->
+        </mat-list-item>
+        <ng-container *ngIf="!!owner.properties.tag">
+            <div *ngFor="let tag of owner.properties.tag">
+                <mat-list-item *ngIf="tag !== 'Connected Institution' && tag !== 'REN'">
+                    <mat-icon>label</mat-icon>{{tag}}
+                </mat-list-item>
+            </div>
+        </ng-container>
+    </mat-expansion-panel>
+</mat-accordion>

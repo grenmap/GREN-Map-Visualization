@@ -1,0 +1,15 @@
+<div class="map-container">
+  <div class="map-frame">
+    <div #map id="map"></div>
+    <div id="logo-container" *ngIf='!!config.showLogo'>
+      <app-logo></app-logo>
+    </div>
+    <app-filter></app-filter>
+    <button mat-mini-fab color="primary" id="list-rens" aria-label="Show all RENs" (click)="onRENBtnClick()">
+      <mat-icon>school</mat-icon>
+    </button>
+    <div id="spinner-container" *ngIf="queryService.queryInProgress">
+      <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+    </div>
+  </div>
+</div>

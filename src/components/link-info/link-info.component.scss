@@ -1,0 +1,42 @@
+.mat-expansion-panel {
+    box-shadow: none;
+}
+
+.mat-expansion-panel-header {
+    height: auto!important;
+    font-size: 11px;
+}
+.mat-icon {
+    color: #b41918;
+}
+
+#properties .mat-icon{
+    vertical-align: middle;
+}
+
+#connected-to .mat-icon {
+    font-size: 11px;
+    height: 11px;
+}
+
+div.item-contents {
+    padding: 0px;
+    font-size: 14px;
+}
+
+.mat-mdc-list, .item-properties {
+    padding: 0px;
+}
+.item-properties .mat-mdc-list-item {
+    padding: 0px;
+    display: inline-block;
+    height: auto;
+    width: auto;
+    min-height: 20px;
+}
+
+
+.mat-ripple {
+    margin: 0px;
+    padding: 0px;
+}
