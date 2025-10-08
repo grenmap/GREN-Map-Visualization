@@ -39,7 +39,8 @@ export const configDefaults: GRENMapConfig = {
         minZoom: 3,
         maxZoom: 18,
         zoomSnap: 0.25,
-        zoomControl: false
+        zoomControl: false,
+        maxBoundsViscosity: 1
     },
     leafletTileURL: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 
@@ -60,6 +61,15 @@ export const configDefaults: GRENMapConfig = {
       NREN: '#2a2d7c',
       SREN: '#744496',
       International: '#239e58',
+      AER: '#ab1a29',
+      AmLight: '#89c362',
+      ANA: '#01abe6',
+      APOnet: '#ffb917',
+      'AP-REX': '#c86caa',
+      Indigo: '#193e43',
+      JGA: '#3559a9',
+      'SANReN/TENET': '#85abb9',
+      BELLA: '#068757'
     },
 
     /** Link hover style overrides */
