@@ -29,13 +29,13 @@ import { GRENMapConfig } from './typings/config';
 export const configDefaults: GRENMapConfig = {
     selector: '[map]',
     tileLayerOptions: {
-        noWrap: true,
+        noWrap: false,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     },
     mapOptions: {
         zoom: 3,
         center: [39.8282, -98.5795],
-        maxBounds: [[90, -180], [-90, 180]],
+        maxBounds: [[90, -540], [-90, 540]],
         minZoom: 3,
         maxZoom: 18,
         zoomSnap: 0.25,
