@@ -40,6 +40,8 @@ type Selected = {
 // leaflet-tooltip-pane so we choose values between them for node and link.
 const NODE_PANE_ZINDEX = '620';
 const LINK_PANE_ZINDEX = '610';
+const LONGITUDE_OFFSETS = [-360, 0, 360];
+const DEFAULT_CURVATURE = 0.125
 
 /**
  * This component handles drawing nodes and links on a leaflet map.
@@ -120,37 +122,56 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         // Highlight styles (and selected styles below) are based on the static styles and merged in
         const nodeHighlightStyle = { ...nodeStyle, ...config.nodeHighlightStyle };
         nodeHighlightStyle.fillColor = nodeHighlightStyle.color;
-        const layer = L.circleMarker([node.latitude, node.longitude], nodeStyle);
-        layer.bindTooltip(node.name);
-        layer.on({
-          click: () => {
-            if (this.target?.id === node.id) {
-              this.selected?.layer?.setStyle(this.selected.style);
-              this.mapService.setTarget(null);
-            } else {
-              this.selected?.layer?.setStyle(this.selected.style);
-              this.mapService.setTarget(node);
-              const nodeSelectedStyle = { ...nodeStyle, ...config.nodeSelectedStyle };
-              nodeSelectedStyle.fillColor = nodeSelectedStyle.color;
-              this.selected = { layer, style: nodeStyle, selectedStyle: nodeSelectedStyle };
-              layer.bringToFront();
-              layer.setStyle(nodeSelectedStyle);
+
+        for (const offset of LONGITUDE_OFFSETS) {
+          const layer = L.circleMarker([node.latitude, Number(node.longitude) + Number(offset)], { ...nodeStyle, bubblingMouseEvents: false });
+          layer.bindTooltip(node.name);
+
+          layer.on({
+            click: () => {
+              if (this.target?.id === node.id) {
+                this.selected?.layer?.setStyle(this.selected.style);
+                this.mapService.setTarget(null);
+              } else {
+                this.selected?.layer?.setStyle(this.selected.style);
+                this.mapService.setTarget(node);
+                const nodeSelectedStyle = { ...nodeStyle, ...config.nodeSelectedStyle };
+                nodeSelectedStyle.fillColor = nodeSelectedStyle.color;
+                this.selected = { layer, style: nodeStyle, selectedStyle: nodeSelectedStyle };
+                layer.bringToFront();
+                layer.setStyle(nodeSelectedStyle);
+              }
+            },
+            mouseover: () => {
+              layer.setStyle(nodeHighlightStyle);
+            },
+            mouseout: () => {
+              if (node === this.target) {
+                layer.setStyle(this.selected.selectedStyle);
+              } else {
+                layer.setStyle(nodeStyle);
+              }
             }
-          },
-          mouseover: () => {
-            layer.setStyle(nodeHighlightStyle);
-          },
-          mouseout: () => {
-            if (node === this.target) {
-              layer.setStyle(this.selected.selectedStyle);
-            } else {
-              layer.setStyle(nodeStyle);
-            }
-          }
-        });
-        this.nodeLayerGroup.addLayer(layer).addTo(this.map);
+          });
+
+          this.nodeLayerGroup.addLayer(layer).addTo(this.map);
+        }
       }
     }
+  }
+
+  /** Haversine distance em km (pode usar qualquer outra fórmula simples) */
+  haversineDistance(a: [number, number], b: [number, number]): number {
+    const R = 6371; // raio da Terra
+    const dLat = (b[0] - a[0]) * Math.PI / 180;
+    const dLon = (b[1] - a[1]) * Math.PI / 180;
+    const lat1 = a[0] * Math.PI / 180;
+    const lat2 = b[0] * Math.PI / 180;
+
+    const h = Math.sin(dLat / 2) ** 2 +
+      Math.cos(lat1) * Math.cos(lat2) *
+      Math.sin(dLon / 2) ** 2;
+    return 2 * R * Math.asin(Math.sqrt(h));
   }
 
   /**
@@ -162,46 +183,150 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    * query service.
    */
   set links(links: Readonly<MapLink>[]) {
-
-    // Clean up any previous points
     this.linkLayerGroup.clearLayers();
-
-    // Grab current config once to shorten code in the rest of this method
     const config = this.config;
 
-    // Add the new points
-    for (const link of links) {
-      // Make sure the endpoints are valid before attempting to draw links.
-      // In theory this should never happen, but this helps debug when it does.
-      if (!link.nodeA.latitude) {
-        console.warn(`Node A latitude not provided for link with id ${link.nodeA.id}`);
-      } else if (!link.nodeA.longitude) {
-        console.warn(`Node A longitude not provided for link with id ${link.nodeA.id}`);
-      } else if (!link.nodeB.latitude) {
-        console.warn(`Node B latitude not provided for link with id ${link.nodeB.id}`);
-      } else if (!link.nodeB.longitude) {
-        console.warn(`Node B longitude not provided for link with id ${link.nodeB.id}`);
+    function generateCurvedPathPoints(
+      latlngA: L.LatLngLiteral,
+      latlngB: L.LatLngLiteral,
+      curvature = DEFAULT_CURVATURE
+    ): L.LatLngExpression[][] {
+      const lat1 = latlngA.lat, lng1 = latlngA.lng;
+      const lat2 = latlngB.lat, lng2 = latlngB.lng;
+
+      let diff = lng2 - lng1;
+      if (diff > 180) diff -= 360;
+      if (diff < -180) diff += 360;
+
+      const crossesAntimeridian = Math.abs(lng2 - lng1) > 180;
+
+      function bezierCurve(a: L.LatLngLiteral, b: L.LatLngLiteral): L.LatLngExpression[] {
+        const lat1 = a.lat, lng1 = a.lng;
+        const lat2 = b.lat, lng2 = b.lng;
+
+        const midLat = (lat1 + lat2) / 2;
+        const midLng = (lng1 + lng2) / 2;
+
+        const dx = lng2 - lng1;
+        const dy = lat2 - lat1;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        const nx = -dy / dist;
+        const ny = dx / dist;
+
+        const curveOffset = curvature * Math.pow(dist, 1.125);
+
+        const controlLat = midLat + ny * curveOffset;
+        const controlLng = midLng + nx * curveOffset;
+
+        const steps = 50;
+        const curvePoints: L.LatLngExpression[] = [];
+        for (let i = 0; i <= steps; i++) {
+          const t = i / steps;
+          const x = (1 - t) * (1 - t) * lng1 + 2 * (1 - t) * t * controlLng + t * t * lng2;
+          const y = (1 - t) * (1 - t) * lat1 + 2 * (1 - t) * t * controlLat + t * t * lat2;
+          curvePoints.push([y, x]);
+        }
+        return curvePoints;
+      }
+
+      if (!crossesAntimeridian) {
+        return [bezierCurve(latlngA, latlngB)];
       } else {
-        // Default link color in case something goes wrong later.
+        const intersectionLat =
+          lat1 + ((lat2 - lat1) * (180 - lng1)) / (lng2 - lng1);
+
+        if (lng1 < 0) {
+          const part1 = bezierCurve(latlngA, { lat: intersectionLat, lng: -180 });
+          const part2 = bezierCurve({ lat: intersectionLat, lng: 180 }, { lat: lat2, lng: lng2 });
+          return [part1, part2];
+        } else {
+          const part1 = bezierCurve(latlngA, { lat: intersectionLat, lng: 180 });
+          const part2 = bezierCurve({ lat: intersectionLat, lng: -180 }, { lat: lat2, lng: lng2 });
+          return [part1, part2];
+        }
+      }
+    }
+
+    for (const link of links) {
+      const A = {
+        latitude: Number(link.nodeA.latitude),
+        longitude: Number(link.nodeA.longitude),
+      };
+
+      const B = {
+        latitude: Number(link.nodeB.latitude),
+        longitude: Number(link.nodeB.longitude),
+      };
+
+      if (!A.latitude || !A.longitude || !B.latitude || !B.longitude) continue;
+
+      for (const baseOffset of LONGITUDE_OFFSETS) {
+        // Converter latitude/longitude para number
+        const A_lat = Number(A.latitude);
+        const A_lon = Number(A.longitude);
+        const B_lat = Number(B.latitude);
+        const B_lon = Number(B.longitude);
+
+        // Posição base de A nessa "view"
+        const A_long = A_lon + baseOffset;
+
+        // Somente considerar cópias de B que fiquem próximas dessa view
+        const candidateOffsets = LONGITUDE_OFFSETS.filter(o => {
+          const B_long = B_lon + o;
+          return Math.abs(B_long - A_long) <= 180;
+        });
+
+        if (candidateOffsets.length === 0) continue;
+
+        // Procurar a cópia de B mais próxima de A_long
+        let bestOffset = candidateOffsets[0];
+        let minDistance = Infinity;
+
+        for (const offset of candidateOffsets) {
+          const distance = this.haversineDistance(
+            [A_lat, A_long],
+            [B_lat, B_lon + offset]
+          );
+          if (distance < minDistance) {
+            minDistance = distance;
+            bestOffset = offset;
+          }
+        }
+
+        const finalB_long = B_lon + bestOffset;
+
+        // Definir estilos
         let linkColor = config.linkStyle.color;
         try {
           const relevantProperties = link.properties[config.linkColorBasedOn] || [];
           linkColor = this.mapPropertyToStyleValue(
             relevantProperties,
             config.linkColorLabels,
-            true,
+            true
           ) || config.linkStyle.color;
         } catch (err) {
           console.error(err);
         }
+
         const linkStyle = { ...config.linkStyle, color: linkColor };
-        const linkHighlightStyle = { ...linkStyle, ...config.linkHighlightStyle};
-        const layer = L.polyline([
-          [link.nodeA.latitude, link.nodeA.longitude],
-          [link.nodeB.latitude, link.nodeB.longitude]
-        ], linkStyle);
-        layer.bindTooltip(link.name);
-        layer.on({
+        const linkHighlightStyle = { ...linkStyle, ...config.linkHighlightStyle };
+
+        const latlngsList = generateCurvedPathPoints(
+          { lat: Number(A_lat), lng: Number(A_long) },
+          { lat: Number(B_lat), lng: Number(finalB_long) }
+        );
+
+        const group = L.featureGroup();
+
+        latlngsList.forEach(latlngs => {
+          const poly = L.polyline(latlngs, { ...linkStyle });
+          group.addLayer(poly);
+        });
+
+        group.bindTooltip(link.name);
+
+        group.on({
           click: () => {
             if (this.target?.id === link.id) {
               this.selected?.layer?.setStyle(this.selected.style);
@@ -209,24 +334,25 @@ export class MapComponent implements AfterViewInit, OnDestroy {
             } else {
               this.selected?.layer?.setStyle(this.selected.style);
               this.mapService.setTarget(link);
-              const linkSelectedStyle = { ...linkStyle, ...config.linkSelectedStyle};
-              this.selected = { layer, style: linkStyle, selectedStyle: linkSelectedStyle };
-              layer.bringToFront();
-              layer.setStyle(linkSelectedStyle);
+              const linkSelectedStyle = { ...linkStyle, ...config.linkSelectedStyle };
+              this.selected = { layer: group as any, style: linkStyle, selectedStyle: linkSelectedStyle };
+              group.bringToFront();
+              group.setStyle(linkSelectedStyle);
             }
           },
           mouseover: () => {
-            layer.setStyle(linkHighlightStyle);
+            group.setStyle(linkHighlightStyle);
           },
           mouseout: () => {
             if (link === this.target) {
-              layer.setStyle(this.selected.selectedStyle);
+              group.setStyle(this.selected.selectedStyle);
             } else {
-              layer.setStyle(linkStyle);
+              group.setStyle(linkStyle);
             }
           }
         });
-        this.linkLayerGroup.addLayer(layer).addTo(this.map);
+
+        this.linkLayerGroup.addLayer(group).addTo(this.map);
       }
     }
   }
@@ -279,7 +405,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
             this.map.flyTo([bounds.minLat, bounds.minLng], 8);
           }
           else {
-            this.map.flyToBounds([[bounds.minLat, bounds.minLng], [bounds.maxLat, bounds.maxLng]], {padding: [10, 10]});
+            this.map.flyToBounds([[bounds.minLat, bounds.minLng], [bounds.maxLat, bounds.maxLng]], { padding: [10, 10] });
           }
         })
       );
